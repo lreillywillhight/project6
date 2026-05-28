@@ -107,7 +107,16 @@ int main()
         emp->totalHours = tempSum;
     }
 
-    //TODO SORT VECTOR
+    //sort
+    //index numeral i,j required for sort size reduce
+    for (int i = 0 ; i < NUM_EMPLOYEES - 1; i++) { //all elements of array
+        for (int j = 0; j < NUM_EMPLOYEES - 1 - i; j++) { //reduce by already sorted
+            if (employeeData[j]->totalHours < employeeData[j+1]->totalHours) {
+                swap(employeeData[j],employeeData[j+1]);
+            }
+        }
+    }
+
 
     int nameL = 20; //placeholder
     int dayL = 5;
@@ -134,7 +143,10 @@ int main()
         cout << endl;
     }
 
-    
+    //???
+    for (Employee* emp : employeeData) {
+        delete emp;
+    }
 
 
 
