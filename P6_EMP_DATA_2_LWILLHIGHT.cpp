@@ -136,21 +136,40 @@ int main()
     cout << setw(dayL) << "Tot";
     cout << endl;
 
-    //print()
-    //ref with foreach
-    for (int i = 0; i < NUM_EMPLOYEES; i++) {
-        //name
-        cout << left << setw(nameL) << setfill('_') << employeeData[i]->name << "__";
-        //hours
-        // cout << right;
-        // resetiosflags;
-        for (int j = 0; j < 7; j++) {
-            cout << setw(dayL) << setfill(' ') << employeeData[i]->hours[j];
+    // //print()
+    // //refact with foreach
+    // for (int i = 0; i < NUM_EMPLOYEES; i++) {
+    // // for (Employee* emp : employeeData) {
+    //     //name
+    //     cout << left << setw(nameL) << setfill('_') << employeeData[i]->name << "__";
+    //     //hours
+    //     // cout << right;
+    //     // resetiosflags;
+    //     for (int j = 0; j < 7; j++) {
+    //         cout << setw(dayL) << setfill(' ') << employeeData[i]->hours[j];
+    //     }
+    //     //total hours
+    //     cout << setw(dayL) << setfill (' ') << employeeData[i]->totalHours;
+    //     cout << endl;
+    // }
+
+    for (Employee* emp : employeeData) {
+        cout << left << setw(nameL) << setfill ('_') << emp->name << "__";
+        for (int hour : emp->hours) {
+            cout << setw(dayL) << setfill (' ') << hour;
         }
-        //total hours
-        cout << setw(dayL) << setfill (' ') << employeeData[i]->totalHours;
+        cout << setw(dayL) << setfill (' ') << emp->totalHours;
         cout << endl;
     }
+
+    //sample for refactor
+    // for (Employee* emp : workers) {
+    //     cout << emp->name << ": ";
+    //     for (int hr : emp->hours) {
+    //         cout << hr << " ";
+    //     }
+    //     cout << endl;
+    // }
 
     // for (Employee* emp : employeeData) {
     //     cout << emp->totalHours;
