@@ -39,7 +39,7 @@ void loadFile (ifstream& inFile) {
     cout << endl << "Weekly hours manager: " << endl;
     string fileName;
     cout << "Please enter file name: ";
-    fileName = "empdata.txt";
+    fileName = "empdata4.txt";
     cout << fileName;
     //cin >> fileName;
     cout << endl;
@@ -60,6 +60,11 @@ int countEmployees(ifstream& inFile) {
     return empNum;
 }
 
+struct Employee {
+    string name;
+    vector<int> hours;
+    int totalHours;
+};
 
 int main() 
 {
@@ -71,52 +76,35 @@ int main()
 
     const int NUM_EMPLOYEES = countEmployees(fin);
 
-    struct Employee {
-        string name;
-        vector<int> hours;
-        int totalHours;
-    };
-
     //declare employeeData vector of type Employee, length NUM_EMPLOYEES
     vector<Employee*> employeeData(NUM_EMPLOYEES);
 
     //initialize employees
     for (int i = 0; i < NUM_EMPLOYEES; i++) {
-        employeeData[i] = new Employee {"defaulto", {}, i};
+        employeeData[i] = new Employee {"defaulto", {}, 0};
         // employeeData[i]->name = "defaulto";
         employeeData[i]->hours.resize(7,0);
         // employeeData[i]->totalHours = ;
     }
-
-    //populate employeeData vector with data from ifstream fin
-    string tempName = "";
-    int tempNum = 0;
-    for (int i = 0; i < NUM_EMPLOYEES; i++) {
-        for (int j = 0; j < 8 ; j++) {
-            if (j == 0) {
-                fin >> tempName;
-                employeeData[i]->name = tempName;
-                cout << "user " << i << " assigned name: " << employeeData[i]->name << endl;
-            }
-            else {
-                fin >> tempNum;
-                employeeData[i]->hours[j-1] = tempNum ;
-                cout << "tempnum " << tempNum << endl;
-                cout << "user " << i << "assigned hour: " << employeeData[i]->hours[j-1] << endl;
-            }
+    
+    for (Employee* emp : employeeData) {
+        string tempName = "";
+        int tempNum = 0;
+        fin >> tempName;
+        emp-> name = tempName;
+        for (int i = 0; i < 7; i++) {
+            fin >> tempNum;
+            emp->hours[i] = tempNum;
         }
     }
     fin.close();
 
-    //sum hours from employeeData.hours, assign to employeeData.totalHours
-    for (int i =  0; i < NUM_EMPLOYEES; i++) {
+    for (Employee* emp: employeeData) {
         int tempSum = 0;
-        for (int j = 0; j < 7; j++) {
-            tempSum = tempSum + employeeData[i]->hours[j];
-            // cout << "tempsum " << i << tempSum << endl;
+        for (int hrs : emp->hours) {
+            tempSum = tempSum + hrs;
         }
-        employeeData[i]->totalHours = tempSum;
-        cout << "total: " << i << " = " << employeeData[i]->totalHours << endl;
+        emp->totalHours = tempSum;
     }
 
     //TODO SORT VECTOR
@@ -136,22 +124,6 @@ int main()
     cout << setw(dayL) << "Tot";
     cout << endl;
 
-    // //print()
-    // //refact with foreach
-    // for (int i = 0; i < NUM_EMPLOYEES; i++) {
-    // // for (Employee* emp : employeeData) {
-    //     //name
-    //     cout << left << setw(nameL) << setfill('_') << employeeData[i]->name << "__";
-    //     //hours
-    //     // cout << right;
-    //     // resetiosflags;
-    //     for (int j = 0; j < 7; j++) {
-    //         cout << setw(dayL) << setfill(' ') << employeeData[i]->hours[j];
-    //     }
-    //     //total hours
-    //     cout << setw(dayL) << setfill (' ') << employeeData[i]->totalHours;
-    //     cout << endl;
-    // }
 
     for (Employee* emp : employeeData) {
         cout << left << setw(nameL) << setfill ('_') << emp->name << "__";
@@ -162,19 +134,7 @@ int main()
         cout << endl;
     }
 
-    //sample for refactor
-    // for (Employee* emp : workers) {
-    //     cout << emp->name << ": ";
-    //     for (int hr : emp->hours) {
-    //         cout << hr << " ";
-    //     }
-    //     cout << endl;
-    // }
-
-    // for (Employee* emp : employeeData) {
-    //     cout << emp->totalHours;
-    // }
-
+    
 
 
 
