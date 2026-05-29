@@ -43,7 +43,7 @@ struct Employee {
 //opens file in fstream, includes error handler and input code
 void loadFile (ifstream& inFile) {
     cout << endl << "Weekly hours manager: " << endl;
-    string fileName = "empdata3.txt";
+    string fileName = "empdata.txt";
     cout << "Please enter file name: ";
     // cin >> fileName;
     cout << "loading... " << fileName << endl;
@@ -65,8 +65,8 @@ int countEmployees(ifstream& inFile) {
 }
 
 //initialize employees in existing vector list
-void initList(vector<Employee*>& list, int employeeNum) {
-    for (int i = 0; i < employeeNum; i++) {
+void initList(vector<Employee*>& list) {
+    for (int i = 0; i < list.size(); i++) {
         list[i] = new Employee {"defaulto", {}, 0};
         list[i]->hours.resize(7,0);
     }
@@ -74,7 +74,6 @@ void initList(vector<Employee*>& list, int employeeNum) {
 
 //set employee values from ifstream
 //close file
-// void loadEmployees(ifstream& inFile, vector<Employee*>& list, int numEmployees) {
 void loadEmployees(ifstream& inFile, vector<Employee*>& list) {
     for (Employee* emp: list) {
         string tempName = "";
@@ -95,14 +94,14 @@ void loadEmployees(ifstream& inFile, vector<Employee*>& list) {
 }
 
 //sort vector employees by total hours, most to least
-void hoursSort(vector<Employee*>& list, int employeeNum) {
+void hoursSort(vector<Employee*>& list) {
     //maximum sort action needed == listSize - 1
-    for (int i = 0; i < employeeNum - 1; i++) {
+    for (int i = 0; i < list.size() - 1; i++) {
         //1 less sort per iteration as each iteration finalizes one element position
-        for (int j = 0; j < employeeNum - 1 - i; j++) {
+        for (int j = 0; j < list.size() - 1 - i; j++) {
             //moves smaller items to back of array (last to be printed)
             if (list[j]->totalHours < list[j+1]->totalHours) {
-                swap(list[j], list [j+1]);
+                swap(list[j], list[j+1]);
             }
         }
     }
@@ -130,7 +129,7 @@ void header(int NAME_LENGTH, int DAY_LENGTH) {
     cout << setw(DAY_LENGTH) << "Sat";
     cout << setw(DAY_LENGTH) << "Sun";
     cout << setw(DAY_LENGTH) << "Tot";
-    cout << endl;        
+    cout << endl;
 }
 
 //print data from vector, should align nicely with header
@@ -159,20 +158,18 @@ int main()
     
     //create vector of type employee* , size NUM_EMPLOYEES
     vector<Employee*> employeeData(NUM_EMPLOYEES);
-    // vector<Employee*>* employeeData =  new vector<Employee*>;
 
     //initialize employees in vector with default values
     //importantly - sets vector.vector dimension
-    initList(employeeData, NUM_EMPLOYEES);
+    initList(employeeData);
     
     //declare employee values from ifstream
     //close file
-    // loadEmployees(fin, employeeData, NUM_EMPLOYEES);
     loadEmployees(fin, employeeData);
     fin.close();
     
     //sort vector for output
-    hoursSort(employeeData, NUM_EMPLOYEES);
+    hoursSort(employeeData);
     
     //OUTPUT
     
@@ -186,12 +183,18 @@ int main()
     //print from vector
     printTable (employeeData, NAME_LENGTH, DAY_LENGTH);
 
-    cout << "\n\nEND\n\n";
-
+    
     //delete data from vector
     for (Employee* emp : employeeData) {
         delete emp;
     }
+    
+    //double check file close
+    if (fin.is_open()) {
+        cout << "Forgot to close file!";
+    }
+
+    cout << "\n\nEND\n\n";
     
     return 0;
 
