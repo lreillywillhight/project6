@@ -74,7 +74,8 @@ void initList(vector<Employee*>& list, int employeeNum) {
 
 //set employee values from ifstream
 //close file
-void loadEmployees(ifstream& inFile, vector<Employee*>& list, int numEmployees) {
+// void loadEmployees(ifstream& inFile, vector<Employee*>& list, int numEmployees) {
+void loadEmployees(ifstream& inFile, vector<Employee*>& list) {
     for (Employee* emp: list) {
         string tempName = "";
         inFile >> tempName;
@@ -90,7 +91,7 @@ void loadEmployees(ifstream& inFile, vector<Employee*>& list, int numEmployees) 
         }
         emp->totalHours = tempSum;
     }
-    inFile.close();
+    // inFile.close();
 }
 
 //sort vector employees by total hours, most to least
@@ -158,6 +159,7 @@ int main()
     
     //create vector of type employee* , size NUM_EMPLOYEES
     vector<Employee*> employeeData(NUM_EMPLOYEES);
+    // vector<Employee*>* employeeData =  new vector<Employee*>;
 
     //initialize employees in vector with default values
     //importantly - sets vector.vector dimension
@@ -165,7 +167,9 @@ int main()
     
     //declare employee values from ifstream
     //close file
-    loadEmployees(fin, employeeData, NUM_EMPLOYEES);
+    // loadEmployees(fin, employeeData, NUM_EMPLOYEES);
+    loadEmployees(fin, employeeData);
+    fin.close();
     
     //sort vector for output
     hoursSort(employeeData, NUM_EMPLOYEES);
