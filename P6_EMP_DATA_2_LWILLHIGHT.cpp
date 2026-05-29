@@ -15,6 +15,8 @@ reformatted using vectors
 rewritten from start
 
 finished: all-in-all, not too much space saved, codewise
+however, much less parameters needed and
+easier to read in general
 
 */
 
@@ -41,12 +43,10 @@ struct Employee {
 //opens file in fstream, includes error handler and input code
 void loadFile (ifstream& inFile) {
     cout << endl << "Weekly hours manager: " << endl;
-    string fileName;
+    string fileName = "empdata3.txt";
     cout << "Please enter file name: ";
-    // fileName = "empdata4.txt";
-    cout << fileName;
-    cin >> fileName;
-    cout << endl;
+    // cin >> fileName;
+    cout << "loading... " << fileName << endl;
     inFile.open(fileName);
     if (!inFile.is_open()) {
         cout << "Could not open file: " << fileName << endl;
@@ -64,7 +64,7 @@ int countEmployees(ifstream& inFile) {
     return empNum;
 }
 
-//initialize employees in vector list
+//initialize employees in existing vector list
 void initList(vector<Employee*>& list, int employeeNum) {
     for (int i = 0; i < employeeNum; i++) {
         list[i] = new Employee {"defaulto", {}, 0};
@@ -73,15 +73,16 @@ void initList(vector<Employee*>& list, int employeeNum) {
 }
 
 //set employee values from ifstream
+//close file
 void loadEmployees(ifstream& inFile, vector<Employee*>& list, int numEmployees) {
     for (Employee* emp: list) {
         string tempName = "";
         inFile >> tempName;
         emp->name = tempName;
-        for (int i = 0; i < 7; i++) {
+        for (int& hr: emp->hours) {
             int tempNum = 0;
             inFile >> tempNum;
-            emp->hours[i] = tempNum;
+            hr = tempNum;
         }
         int tempSum = 0;
         for (int hr: emp->hours) {
@@ -94,8 +95,11 @@ void loadEmployees(ifstream& inFile, vector<Employee*>& list, int numEmployees) 
 
 //sort vector employees by total hours, most to least
 void hoursSort(vector<Employee*>& list, int employeeNum) {
+    //maximum sort action needed == listSize - 1
     for (int i = 0; i < employeeNum - 1; i++) {
+        //1 less sort per iteration as each iteration finalizes one element position
         for (int j = 0; j < employeeNum - 1 - i; j++) {
+            //moves smaller items to back of array (last to be printed)
             if (list[j]->totalHours < list[j+1]->totalHours) {
                 swap(list[j], list [j+1]);
             }
@@ -103,7 +107,7 @@ void hoursSort(vector<Employee*>& list, int employeeNum) {
     }
 }
 
-//helper function for print output
+//formatting parameter for print output
 int NameLength(vector<Employee*> list) {
     int tempLength = 0;
     for (Employee* emp: list) {
@@ -114,7 +118,7 @@ int NameLength(vector<Employee*> list) {
     return tempLength;
 }
 
-//generic header to look nice, print
+//generic header to look nice, print to console
 void header(int NAME_LENGTH, int DAY_LENGTH) {
     cout << setw(NAME_LENGTH + 2) << left << "Name:";
     cout << setw(DAY_LENGTH) << "Mon";
@@ -128,7 +132,7 @@ void header(int NAME_LENGTH, int DAY_LENGTH) {
     cout << endl;        
 }
 
-//print data from vector
+//print data from vector, should align nicely with header
 void printTable (vector<Employee*> list, int nameL, int dayL) {
     for (Employee* emp : list) {
         cout << left << setw(nameL + 2) << setfill ('_') << emp->name;
@@ -146,34 +150,36 @@ int main()
     //declare fstream input
     ifstream fin;
     
-    //load file (formatted .txt,see instructions)
+    //load file (pre-formatted .txt,see instructions)
     loadFile(fin);
     
-    //remove list size from stream, define for parameter
+    //pull list size from stream, declare for parameter
     const int NUM_EMPLOYEES = countEmployees(fin);
     
-    //creates vector of pointer to type emplyee, size NUM_EMPLOYEES
+    //create vector of type employee* , size NUM_EMPLOYEES
     vector<Employee*> employeeData(NUM_EMPLOYEES);
 
     //initialize employees in vector with default values
+    //importantly - sets vector.vector dimension
     initList(employeeData, NUM_EMPLOYEES);
     
-    //declare employee name, hours, totalhours values from stream
+    //declare employee values from ifstream
     //close file
     loadEmployees(fin, employeeData, NUM_EMPLOYEES);
     
-    //sort for output
+    //sort vector for output
     hoursSort(employeeData, NUM_EMPLOYEES);
     
     //OUTPUT
     
+    //constants for print formatting
     const int NAME_LENGTH = NameLength(employeeData);
     const int DAY_LENGTH = 5;
     
-    //generic
+    //generic header
     header(NAME_LENGTH, DAY_LENGTH);
     
-    //from vector
+    //print from vector
     printTable (employeeData, NAME_LENGTH, DAY_LENGTH);
 
     cout << "\n\nEND\n\n";
