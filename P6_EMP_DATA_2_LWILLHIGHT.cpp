@@ -43,10 +43,10 @@ struct Employee {
 //opens file in fstream, includes error handler and input code
 void loadFile (ifstream& inFile) {
     cout << endl << "Weekly hours manager: " << endl;
-    string fileName = "empdata.txt";
     cout << "Please enter file name: ";
+    string fileName = "empdata.txt";
     // cin >> fileName;
-    cout << "loading... " << fileName << endl;
+    cout << endl << "loading... " << fileName << endl;
     inFile.open(fileName);
     if (!inFile.is_open()) {
         cout << "Could not open file: " << fileName << endl;
@@ -56,8 +56,8 @@ void loadFile (ifstream& inFile) {
     }
 }
 
-//countEmployees to remove from stream 
-//and set employee count for use in other funcs
+//countEmployees to remove count header from stream 
+//and return employee count for vector size
 int countEmployees(ifstream& inFile) {
     int empNum;
     inFile >> empNum;
@@ -65,6 +65,8 @@ int countEmployees(ifstream& inFile) {
 }
 
 //initialize employees in existing vector list
+//default values
+//resize vector.vector hours
 void initList(vector<Employee*>& list) {
     for (int i = 0; i < list.size(); i++) {
         list[i] = new Employee {"defaulto", {}, 0};
@@ -73,24 +75,26 @@ void initList(vector<Employee*>& list) {
 }
 
 //set employee values from ifstream
-//close file
+//uses initialized and formatted vector<Employee*>
 void loadEmployees(ifstream& inFile, vector<Employee*>& list) {
     for (Employee* emp: list) {
+        //name
         string tempName = "";
         inFile >> tempName;
         emp->name = tempName;
+        //hours per day
         for (int& hr: emp->hours) {
             int tempNum = 0;
             inFile >> tempNum;
             hr = tempNum;
         }
+        //total hours
         int tempSum = 0;
         for (int hr: emp->hours) {
             tempSum = tempSum + hr;
         }
         emp->totalHours = tempSum;
     }
-    // inFile.close();
 }
 
 //sort vector employees by total hours, most to least
@@ -98,6 +102,7 @@ void hoursSort(vector<Employee*>& list) {
     //maximum sort action needed == listSize - 1
     for (int i = 0; i < list.size() - 1; i++) {
         //1 less sort per iteration as each iteration finalizes one element position
+        //no check for early sort finish (introducing unpredicted processing overhead)
         for (int j = 0; j < list.size() - 1 - i; j++) {
             //moves smaller items to back of array (last to be printed)
             if (list[j]->totalHours < list[j+1]->totalHours) {
@@ -108,6 +113,7 @@ void hoursSort(vector<Employee*>& list) {
 }
 
 //formatting parameter for print output
+//return length of longest name in vector.->name
 int NameLength(vector<Employee*> list) {
     int tempLength = 0;
     for (Employee* emp: list) {
@@ -120,6 +126,7 @@ int NameLength(vector<Employee*> list) {
 
 //generic header to look nice, print to console
 void header(int NAME_LENGTH, int DAY_LENGTH) {
+    cout << endl;
     cout << setw(NAME_LENGTH + 2) << left << "Name:";
     cout << setw(DAY_LENGTH) << "Mon";
     cout << setw(DAY_LENGTH) << "Tue";
@@ -135,10 +142,13 @@ void header(int NAME_LENGTH, int DAY_LENGTH) {
 //print data from vector, should align nicely with header
 void printTable (vector<Employee*> list, int nameL, int dayL) {
     for (Employee* emp : list) {
+        //name
         cout << left << setw(nameL + 2) << setfill ('_') << emp->name;
+        //hours per day
         for (int hour : emp->hours) {
             cout << setw(dayL) << setfill (' ') << hour;
         }
+        //total hours for week
         cout << setw(dayL) << setfill (' ') << emp->totalHours;
         cout << endl;
     }
@@ -153,7 +163,7 @@ int main()
     //load file (pre-formatted .txt,see instructions)
     loadFile(fin);
     
-    //pull list size from stream, declare for parameter
+    //pull list size from stream, declare for vector size parameter
     const int NUM_EMPLOYEES = countEmployees(fin);
     
     //create vector of type employee* , size NUM_EMPLOYEES
@@ -286,9 +296,4 @@ Scott,Annis_______1    6    2    0    0    1    0    10
     //     emp->hours.resize(7,0);
     // }
 
-            // for (int hr: emp->hours) {
-        //     int tempNum = 0;
-        //     inFile >> tempNum;
-        //     hr = tempNum;
-        // }
 */
